@@ -1,0 +1,21 @@
+/* src/styles/background.css */
+@keyframes bgScroll {
+  0%,
+  100% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+}
+
+.animated-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #4c1d95, #1d4ed8, #10b981, #ec4899);
+  background-size: 300% 300%;
+  animation: bgScroll 20s ease infinite;
+}
