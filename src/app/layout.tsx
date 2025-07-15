@@ -4,7 +4,7 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import OpeningSlide from "./_components/OpeningSlide";
+import ScratchReveal from "./_components/ScratchReveal";
 
 export const metadata: Metadata = {
   title: "Anika's Website",
@@ -24,8 +24,9 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable} relative min-h-screen`}>
       <head>{/* Only head elements here, no <div> allowed */}</head>
       <body>
-        <OpeningSlide />
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <ScratchReveal>{children}</ScratchReveal>
+        </TRPCReactProvider>
       </body>
     </html>
   );

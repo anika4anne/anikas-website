@@ -95,31 +95,24 @@ const skills = [
 
 const sections = [
   {
-    id: "home",
+    id: "about",
     title: "Hi, I'm Anika",
     subtitle: "Dancer. Singer. Pianist. Coder. CADer. Creative soul.",
-    gradient: ["#6d28d9", "#be185d", "#312e81"], // purple, pink, purple
+    gradient: ["#1e1b4b", "#831843", "#0f172a"], // dark purple, dark pink, dark blue
   },
   {
     id: "skills",
     title: "Skills",
     subtitle:
       "Familiar with a variety of programming languages and tools, including Python, JavaScript, React, Node.js, and more.",
-    gradient: ["#6d28d9", "#2563eb", "#312e81"], // purple, blue, purple
+    gradient: ["#1e1b4b", "#1e3a8a", "#0f172a"], // dark purple, dark blue, dark blue
   },
   {
     id: "projects",
     title: "Projects",
     subtitle:
       "From web apps to CAD models — here's where code meets creativity.",
-    gradient: ["#6d28d9", "#14b8a6", "#312e81"], // purple, teal, purple
-  },
-  {
-    id: "about",
-    title: "About Me",
-    subtitle:
-      "Performer, maker, problem solver. I use code, music, and motion to tell stories.",
-    gradient: ["#6d28d9", "#fbbf24", "#312e81"], // purple, gold, purple
+    gradient: ["#1e1b4b", "#134e4a", "#0f172a"], // dark purple, dark teal, dark blue
   },
 ];
 
@@ -155,7 +148,7 @@ function useSectionScrollGradients(
   sectionIds: string[],
   gradientsInput: string[][],
 ) {
-  const fallback: [string, string, string] = ["#6d28d9", "#6d28d9", "#6d28d9"];
+  const fallback: [string, string, string] = ["#1e1b4b", "#1e1b4b", "#1e1b4b"];
   // Helper to ensure a [string, string, string] gradient
   function getSafeGradient(arr: unknown): [string, string, string] {
     return Array.isArray(arr) &&
@@ -265,13 +258,13 @@ export default function HomePage() {
               >
                 <motion.a
                   href={`#${section.id}`}
-                  className="relative transition-colors duration-200 hover:text-pink-200"
+                  className="relative transition-colors duration-200 hover:text-purple-300"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   {section.id.charAt(0).toUpperCase() + section.id.slice(1)}
                   <motion.div
-                    className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-pink-400 to-purple-500"
+                    className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-purple-600 to-indigo-600"
                     initial={{ width: 0 }}
                     whileHover={{ width: "100%" }}
                     transition={{ duration: 0.3 }}
@@ -343,7 +336,7 @@ export default function HomePage() {
                   }}
                 >
                   {/* Glowing effect on hover */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-400/20 to-purple-600/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-600/20 to-indigo-600/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                   <div className="relative mb-4">
                     <Image
@@ -361,13 +354,13 @@ export default function HomePage() {
                       }}
                     />
                     <div
-                      className="flex hidden h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-pink-400 to-purple-600 text-lg font-bold text-white shadow-lg"
+                      className="flex hidden h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-800 to-indigo-800 text-lg font-bold text-white shadow-lg"
                       style={{ display: "none" }}
                     >
                       {skill.name.charAt(0)}
                     </div>
                   </div>
-                  <h3 className="relative text-center text-sm font-semibold text-white transition-all duration-300 group-hover:scale-105 group-hover:text-pink-200">
+                  <h3 className="relative text-center text-sm font-semibold text-white transition-all duration-300 group-hover:scale-105 group-hover:text-purple-300">
                     {skill.name}
                   </h3>
 
@@ -376,7 +369,7 @@ export default function HomePage() {
                     {[0, 1, 2].map((i) => (
                       <motion.div
                         key={i}
-                        className="absolute h-1 w-1 rounded-full bg-pink-400"
+                        className="absolute h-1 w-1 rounded-full bg-purple-400"
                         animate={{
                           y: [0, -10, 0],
                           opacity: [0, 1, 0],
@@ -399,70 +392,105 @@ export default function HomePage() {
           )}
 
           {section.id === "about" && (
-            <div className="mt-12 w-full max-w-4xl">
+            <div className="mt-12 w-full max-w-5xl">
               <motion.div
-                className="flex flex-col items-center space-y-8 rounded-3xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-xl"
+                className="flex flex-col items-center space-y-12 rounded-3xl border border-white/20 bg-white/10 p-12 shadow-2xl backdrop-blur-xl"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
+                {/* Hero section with larger profile */}
                 <motion.div
-                  className="flex items-center space-x-4"
+                  className="flex flex-col items-center space-y-6 text-center"
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-pink-400 to-purple-500 text-2xl">
+                  <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-purple-800 via-indigo-800 to-slate-900 text-4xl shadow-2xl">
                     👋
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white">
+                    <h3 className="mb-2 text-4xl font-bold text-white">
                       Hi! I&apos;m Anika Anne
                     </h3>
-                    <p className="text-lg text-white/80">
+                    <p className="text-xl text-white/80">
                       10th Grader at John Jay High School
                     </p>
                   </div>
                 </motion.div>
 
+                {/* Enhanced description */}
                 <motion.div
-                  className="max-w-3xl text-center"
+                  className="max-w-4xl text-center"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
-                  <p className="text-lg leading-relaxed text-white/90">
-                    I&apos;m a student at John Jay High School, pursuing my
-                    passion for technology and innovation. With a love for
-                    coding in my free time and hands-on experience with CAD for
-                    FTC robotics, I combine creativity with technical precision.
-                    I have strong skills in web development and 3D modeling, as
-                    well as experience with frameworks like Next.js, React, and
-                    CAD software.
+                  <p className="mb-6 text-xl leading-relaxed text-white/90">
+                    I&apos;m a passionate student at John Jay High School,
+                    diving deep into the world of technology and innovation.
+                    When I&apos;m not coding in my free time, you&apos;ll find
+                    me designing 3D models for FTC robotics or exploring new
+                    frameworks and tools. I love combining creativity with
+                    technical precision to bring ideas to life.
+                  </p>
+                  <p className="text-lg leading-relaxed text-white/80">
+                    My journey spans from web development with Next.js and React
+                    to CAD modeling with OnShape, always pushing the boundaries
+                    of what&apos;s possible through code and design.
                   </p>
                 </motion.div>
 
+                {/* Enhanced tags with better styling */}
                 <motion.div
-                  className="mt-6 flex flex-wrap justify-center gap-4"
+                  className="flex flex-wrap justify-center gap-4"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.6 }}
                 >
-                  <span className="rounded-full border border-pink-400/30 bg-pink-500/20 px-4 py-2 text-sm font-medium text-pink-200">
+                  <span className="rounded-full border border-red-600/30 bg-red-900/20 px-6 py-3 text-base font-medium text-red-300 backdrop-blur-sm transition-colors hover:bg-red-900/30">
                     Web Development
                   </span>
-                  <span className="rounded-full border border-purple-400/30 bg-purple-500/20 px-4 py-2 text-sm font-medium text-purple-200">
+                  <span className="rounded-full border border-purple-600/30 bg-purple-900/20 px-6 py-3 text-base font-medium text-purple-300 backdrop-blur-sm transition-colors hover:bg-purple-900/30">
                     CAD Design
                   </span>
-                  <span className="rounded-full border border-blue-400/30 bg-blue-500/20 px-4 py-2 text-sm font-medium text-blue-200">
+                  <span className="rounded-full border border-blue-600/30 bg-blue-900/20 px-6 py-3 text-base font-medium text-blue-300 backdrop-blur-sm transition-colors hover:bg-blue-900/30">
                     FTC Robotics
                   </span>
-                  <span className="rounded-full border border-green-400/30 bg-green-500/20 px-4 py-2 text-sm font-medium text-green-200">
+                  <span className="rounded-full border border-emerald-600/30 bg-emerald-900/20 px-6 py-3 text-base font-medium text-emerald-300 backdrop-blur-sm transition-colors hover:bg-emerald-900/30">
                     Next.js
                   </span>
-                  <span className="rounded-full border border-yellow-400/30 bg-yellow-500/20 px-4 py-2 text-sm font-medium text-yellow-200">
+                  <span className="rounded-full border border-amber-600/30 bg-amber-900/20 px-6 py-3 text-base font-medium text-amber-300 backdrop-blur-sm transition-colors hover:bg-amber-900/30">
                     React
                   </span>
+                  <span className="rounded-full border border-indigo-600/30 bg-indigo-900/20 px-6 py-3 text-base font-medium text-indigo-300 backdrop-blur-sm transition-colors hover:bg-indigo-900/30">
+                    TypeScript
+                  </span>
+                </motion.div>
+
+                {/* Call to action */}
+                <motion.div
+                  className="text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                >
+                  <p className="mb-4 text-lg text-white/70">
+                    Scroll down to explore my skills and projects
+                  </p>
+                  <div className="flex justify-center">
+                    <motion.div
+                      className="flex h-10 w-6 justify-center rounded-full border-2 border-white/30"
+                      animate={{ y: [0, 10, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <motion.div
+                        className="mt-2 h-3 w-1 rounded-full bg-white/60"
+                        animate={{ y: [0, 12, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      />
+                    </motion.div>
+                  </div>
                 </motion.div>
               </motion.div>
             </div>
@@ -479,7 +507,7 @@ export default function HomePage() {
           exit={{ opacity: 0 }}
         >
           {/* Siri-style animated background */}
-          <div className="absolute inset-0 -z-10 animate-[gradient_8s_ease_in_out_infinite] bg-gradient-to-br from-pink-400 via-purple-400 to-indigo-400 bg-[length:300%_300%] opacity-20 blur-3xl" />
+          <div className="absolute inset-0 -z-10 animate-[gradient_8s_ease_in_out_infinite] bg-gradient-to-br from-purple-800 via-indigo-800 to-slate-900 bg-[length:300%_300%] opacity-20 blur-3xl" />
 
           {/* Modal box */}
           <motion.div
@@ -491,7 +519,7 @@ export default function HomePage() {
             {/* Close button */}
             <button
               onClick={() => setSelectedProject(null)}
-              className="absolute top-4 right-4 text-xl font-bold text-white hover:text-pink-300"
+              className="absolute top-4 right-4 text-xl font-bold text-white hover:text-purple-300"
             >
               ×
             </button>
