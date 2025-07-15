@@ -1,328 +1,175 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface GrandOpeningProps {
-  onComplete: () => void;
+// SVG flower inspired by the new image (5-petal, pink/orange/yellow)
+function PlumeriaFlower({
+  style = {},
+  ...props
+}: {
+  style?: React.CSSProperties;
+  [key: string]: unknown;
+}) {
+  return (
+    <svg
+      width="40"
+      height="40"
+      viewBox="0 0 40 40"
+      fill="none"
+      style={style}
+      {...props}
+    >
+      <g>
+        {/* 5 petals */}
+        {[...Array(5)].map((_, i) => {
+          const angle = (i * 360) / 5;
+          return (
+            <path
+              key={i}
+              d="M20 8 Q28 6 30 14 Q32 22 20 20 Q8 22 10 14 Q12 6 20 8 Z"
+              fill="url(#petalGradient)"
+              stroke="#d72660"
+              strokeWidth="0.8"
+              transform={`rotate(${angle} 20 20)`}
+            />
+          );
+        })}
+        {/* Petal gradient */}
+        <defs>
+          <radialGradient id="petalGradient" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="#fffbe6" />
+            <stop offset="60%" stopColor="#fbbfce" />
+            <stop offset="100%" stopColor="#f78ca2" />
+          </radialGradient>
+        </defs>
+        {/* Yellow center */}
+        <circle
+          cx="20"
+          cy="20"
+          r="4"
+          fill="#ffd166"
+          stroke="#f78ca2"
+          strokeWidth="0.8"
+        />
+      </g>
+    </svg>
+  );
 }
 
-export default function GrandOpening({ onComplete }: GrandOpeningProps) {
-  const [currentStage, setCurrentStage] = useState(0);
-  const [showContent, setShowContent] = useState(false);
+const NUM_FLOWERS = 18;
 
+export default function GrandOpening({ onFinish }: { onFinish?: () => void }) {
+  const [show, setShow] = useState(true);
+  const [flowersIn, setFlowersIn] = useState(0);
+  const [showRibbon, setShowRibbon] = useState(false);
+
+  // Animate flowers one by one
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowContent(true);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const stages = [
-      2000, // Welcome text
-      3000, // Name reveal
-      2000, // Tagline
-      2500, // Particle explosion
-      1500, // Final flourish
-    ];
-
-    if (currentStage < stages.length) {
-      const timer = setTimeout(() => {
-        setCurrentStage(currentStage + 1);
-      }, stages[currentStage]);
-
-      return () => clearTimeout(timer);
+    if (!show) return;
+    if (flowersIn < NUM_FLOWERS) {
+      const t = setTimeout(() => setFlowersIn(flowersIn + 1), 120);
+      return () => clearTimeout(t);
     } else {
-      // Animation complete
-      setTimeout(() => {
-        onComplete();
-      }, 1000);
+      // After all flowers, show ribbon
+      const t = setTimeout(() => setShowRibbon(true), 500);
+      // Hide after a bit
+      const t2 = setTimeout(() => {
+        setShow(false);
+        onFinish?.();
+      }, 2000);
+      return () => {
+        clearTimeout(t);
+        clearTimeout(t2);
+      };
     }
-  }, [currentStage, onComplete]);
+  }, [flowersIn, show, onFinish]);
 
-  const particles = Array.from({ length: 50 }, (_, i) => i);
-  const sparkles = Array.from({ length: 20 }, (_, i) => i);
+  // Arrange flowers in a circle
+  const flowers = Array.from({ length: NUM_FLOWERS }, (_, i) => {
+    const angle = (2 * Math.PI * i) / NUM_FLOWERS;
+    const r = 36;
+    const x = 50 + Math.cos(angle) * r;
+    const y = 50 + Math.sin(angle) * r;
+    return { x, y };
+  });
 
   return (
     <AnimatePresence>
-      {showContent && (
+      {show && (
         <motion.div
-          className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-black"
-          initial={{ opacity: 0 }}
+          initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 1.2 }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center"
+          style={{
+            background:
+              "linear-gradient(135deg, #fff 0%, #fbbfce 50%, #fff 100%)",
+          }}
         >
-          {/* Stable animated background */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-pink-900 to-blue-900" />
-
-            {/* Floating geometric shapes */}
-            {Array.from({ length: 12 }, (_, i) => (
-              <motion.div
+          <svg
+            width="100vw"
+            height="100vh"
+            viewBox="0 0 100 100"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100vw",
+              height: "100vh",
+              pointerEvents: "none",
+            }}
+          >
+            {/* Flowers in a circle */}
+            {flowers.map((f, i) => (
+              <motion.g
                 key={i}
-                className="animate-pulse-glow absolute h-4 w-4 rounded-full bg-white/20"
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={
+                  i < flowersIn
+                    ? { opacity: 1, scale: 1 }
+                    : { opacity: 0, scale: 0.7 }
+                }
+                transition={{ delay: i * 0.08, duration: 0.5, type: "spring" }}
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-                animate={{
-                  y: [0, -30, 0],
-                  opacity: [0.2, 0.8, 0.2],
-                  scale: [1, 1.5, 1],
-                  rotate: [0, 360],
-                }}
-                transition={{
-                  duration: 4 + Math.random() * 2,
-                  repeat: Infinity,
-                  delay: Math.random() * 2,
-                }}
-              />
-            ))}
-
-            {/* Sparkles */}
-            {sparkles.map((sparkle) => (
-              <motion.div
-                key={sparkle}
-                className="animate-sparkle absolute text-2xl text-white/60"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-                animate={{
-                  opacity: [0, 1, 0],
-                  scale: [0, 1, 0],
-                  rotate: [0, 360],
-                }}
-                transition={{
-                  duration: 3 + Math.random() * 2,
-                  repeat: Infinity,
-                  delay: Math.random() * 3,
+                  transformOrigin: `${f.x.toFixed(2)}% ${f.y.toFixed(2)}%`,
                 }}
               >
-                ✨
-              </motion.div>
+                <foreignObject
+                  x={(f.x - 2).toFixed(2)}
+                  y={(f.y - 2).toFixed(2)}
+                  width={4}
+                  height={4}
+                >
+                  <PlumeriaFlower />
+                </foreignObject>
+              </motion.g>
             ))}
-          </div>
-
-          {/* Main content */}
-          <div className="relative z-10 text-center">
-            {/* Welcome text */}
-            <AnimatePresence>
-              {currentStage >= 0 && (
-                <motion.div
-                  key="welcome"
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -50 }}
-                  transition={{ duration: 0.8 }}
-                  className="mb-8"
-                >
-                  <motion.h2
-                    className="animate-pulse-glow mb-4 text-4xl font-bold text-white md:text-6xl"
-                    animate={{
-                      textShadow: [
-                        "0 0 20px rgba(255,255,255,0.5)",
-                        "0 0 40px rgba(255,255,255,0.8)",
-                        "0 0 20px rgba(255,255,255,0.5)",
-                      ],
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    Welcome to My Website
-                  </motion.h2>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Name reveal */}
-            <AnimatePresence>
-              {currentStage >= 1 && (
-                <motion.div
-                  key="name"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.2 }}
-                  transition={{ duration: 1, type: "spring", bounce: 0.4 }}
-                  className="mb-8"
-                >
-                  <motion.h1
-                    className="animate-pulse-glow bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-6xl font-bold text-transparent md:text-8xl"
-                    animate={{
-                      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                      filter: [
-                        "drop-shadow(0 0 20px rgba(236, 72, 153, 0.5))",
-                        "drop-shadow(0 0 40px rgba(168, 85, 247, 0.8))",
-                        "drop-shadow(0 0 20px rgba(236, 72, 153, 0.5))",
-                      ],
-                    }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    style={{
-                      backgroundSize: "200% 200%",
-                    }}
-                  >
-                    ANIKA ANNE
-                  </motion.h1>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Tagline */}
-            <AnimatePresence>
-              {currentStage >= 2 && (
-                <motion.div
-                  key="tagline"
-                  initial={{ opacity: 0, x: -100 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 100 }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  className="mb-8"
-                >
-                  <motion.p
-                    className="text-xl font-light text-white/80 md:text-2xl"
-                    animate={{
-                      opacity: [0.8, 1, 0.8],
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    Dancer • Singer • Pianist • Coder • CADer • Creative Soul
-                  </motion.p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Enhanced particle explosion */}
-            <AnimatePresence>
-              {currentStage >= 3 && (
-                <motion.div
-                  key="particles"
-                  className="pointer-events-none absolute inset-0"
-                >
-                  {particles.map((particle) => (
-                    <motion.div
-                      key={particle}
-                      className="animate-pulse-glow absolute h-2 w-2 rounded-full bg-gradient-to-r from-pink-400 to-purple-400"
-                      style={{
-                        left: "50%",
-                        top: "50%",
-                      }}
-                      initial={{ scale: 0, opacity: 1 }}
-                      animate={{
-                        x: (Math.random() - 0.5) * 800,
-                        y: (Math.random() - 0.5) * 600,
-                        scale: [0, 1, 0],
-                        opacity: [1, 1, 0],
-                        rotate: [0, 360],
-                      }}
-                      transition={{
-                        duration: 2,
-                        delay: Math.random() * 0.5,
-                        ease: "easeOut",
-                      }}
-                    />
-                  ))}
-
-                  {/* Additional sparkle burst */}
-                  {Array.from({ length: 15 }, (_, i) => (
-                    <motion.div
-                      key={`sparkle-${i}`}
-                      className="absolute text-2xl"
-                      style={{
-                        left: "50%",
-                        top: "50%",
-                      }}
-                      initial={{ scale: 0, opacity: 1 }}
-                      animate={{
-                        x: (Math.random() - 0.5) * 600,
-                        y: (Math.random() - 0.5) * 400,
-                        scale: [0, 1, 0],
-                        opacity: [1, 1, 0],
-                        rotate: [0, 720],
-                      }}
-                      transition={{
-                        duration: 2.5,
-                        delay: Math.random() * 0.8,
-                        ease: "easeOut",
-                      }}
-                    >
-                      ✨
-                    </motion.div>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Final flourish */}
-            <AnimatePresence>
-              {currentStage >= 4 && (
-                <motion.div
-                  key="flourish"
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.5 }}
-                  transition={{ duration: 0.8, type: "spring" }}
-                  className="mt-8"
-                >
-                  <motion.div
-                    className="text-lg text-white/60"
-                    animate={{
-                      opacity: [0.6, 1, 0.6],
-                    }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  >
-                    ✨ Entering the creative universe ✨
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Enhanced loading bar */}
-          <motion.div
-            className="animate-pulse-glow absolute bottom-10 left-1/2 h-2 w-64 -translate-x-1/2 transform overflow-hidden rounded-full bg-white/20"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            <motion.div
-              className="h-full bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400"
-              initial={{ width: "0%" }}
-              animate={{ width: "100%" }}
-              transition={{ duration: 12, ease: "easeInOut" }}
-            />
-          </motion.div>
-
-          {/* Corner decorations */}
-          <motion.div
-            className="absolute top-8 left-8 text-4xl text-white/40"
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          >
-            🌟
-          </motion.div>
-          <motion.div
-            className="absolute top-8 right-8 text-4xl text-white/40"
-            animate={{ rotate: [360, 0] }}
-            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-          >
-            ✨
-          </motion.div>
-          <motion.div
-            className="absolute bottom-20 left-8 text-4xl text-white/40"
-            animate={{ rotate: [0, -360] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          >
-            💫
-          </motion.div>
-          <motion.div
-            className="absolute right-8 bottom-20 text-4xl text-white/40"
-            animate={{ rotate: [-360, 0] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          >
-            ⭐
-          </motion.div>
+            {/* Ribbon in the center */}
+            {showRibbon && (
+              <motion.path
+                d="M50 20 Q55 50 50 80 Q45 50 50 20 Z"
+                fill="url(#ribbonGradient)"
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 0.8, scale: 1 }}
+                transition={{ duration: 0.8 }}
+                style={{ filter: "blur(0.5px)" }}
+              />
+            )}
+            <defs>
+              <linearGradient
+                id="ribbonGradient"
+                x1="50"
+                y1="20"
+                x2="50"
+                y2="80"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="#fbbfce" />
+                <stop offset="1" stopColor="#f78ca2" />
+              </linearGradient>
+            </defs>
+          </svg>
         </motion.div>
       )}
     </AnimatePresence>

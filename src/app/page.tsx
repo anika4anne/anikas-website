@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const projects = [
   {
@@ -131,11 +132,19 @@ type Project = {
 
 function interpolateColor(color1: string, color2: string, factor: number) {
   // color1, color2: hex strings, factor: 0-1
-  const c1Match = color1.match(/#(..)(..)(..)/);
-  const c2Match = color2.match(/#(..)(..)(..)/);
-  const c1 = c1Match ? c1Match.slice(1).map((x) => parseInt(x, 16)) : [0, 0, 0];
-  const c2 = c2Match ? c2Match.slice(1).map((x) => parseInt(x, 16)) : [0, 0, 0];
-  // Ensure both arrays have length 3
+  const hexReg = /#(..)(..)(..)/;
+  const c1Match = hexReg.exec(color1);
+  const c2Match = hexReg.exec(color2);
+  const c1 = c1Match
+    ? [c1Match[1] ?? "00", c1Match[2] ?? "00", c1Match[3] ?? "00"].map((x) =>
+        parseInt(x, 16),
+      )
+    : [0, 0, 0];
+  const c2 = c2Match
+    ? [c2Match[1] ?? "00", c2Match[2] ?? "00", c2Match[3] ?? "00"].map((x) =>
+        parseInt(x, 16),
+      )
+    : [0, 0, 0];
   while (c1.length < 3) c1.push(0);
   while (c2.length < 3) c2.push(0);
   const result = c1.map((v, i) => Math.round(v + ((c2[i] ?? 0) - v) * factor));
@@ -207,7 +216,7 @@ function useSectionScrollGradients(
     window.addEventListener("scroll", onScroll);
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
-  }, [sectionIds, gradientsInput]);
+  }, [sectionIds, gradientsInput, fallback, getSafeGradient]);
 
   return bgGradient;
 }
@@ -274,218 +283,12 @@ export default function HomePage() {
         </nav>
       </header>
       {/* Page Sections */}
-      {sections.map((section, idx) => (
+      {sections.map((section) => (
         <section
           key={section.id}
           id={section.id}
           className={`relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-24 text-center`}
         >
-          {/* Detailed flower vines for home section */}
-          {section.id === "home" && (
-            <>
-              {/* Left detailed flower vine */}
-              <svg
-                className="absolute top-0 left-0 z-0 opacity-40"
-                width="320"
-                height="600"
-                viewBox="0 0 320 600"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ pointerEvents: "none" }}
-              >
-                <path
-                  d="M60 580 Q120 500 80 420 Q40 340 160 300 Q280 260 220 160 Q160 60 300 100"
-                  stroke="#7dd87d"
-                  strokeWidth="6"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-                {/* Leaves */}
-                <ellipse
-                  cx="100"
-                  cy="500"
-                  rx="18"
-                  ry="8"
-                  fill="#5cb85c"
-                  transform="rotate(-30 100 500)"
-                />
-                <ellipse
-                  cx="140"
-                  cy="350"
-                  rx="14"
-                  ry="7"
-                  fill="#5cb85c"
-                  transform="rotate(20 140 350)"
-                />
-                <ellipse
-                  cx="200"
-                  cy="250"
-                  rx="16"
-                  ry="8"
-                  fill="#5cb85c"
-                  transform="rotate(-15 200 250)"
-                />
-                <ellipse
-                  cx="250"
-                  cy="120"
-                  rx="12"
-                  ry="6"
-                  fill="#5cb85c"
-                  transform="rotate(10 250 120)"
-                />
-                {/* Flowers */}
-                <g>
-                  <circle
-                    cx="60"
-                    cy="580"
-                    r="18"
-                    fill="#f9c2ff"
-                    stroke="#e75480"
-                    strokeWidth="4"
-                  />
-                  <circle
-                    cx="80"
-                    cy="420"
-                    r="14"
-                    fill="#fff7ae"
-                    stroke="#e7b54a"
-                    strokeWidth="3"
-                  />
-                  <circle
-                    cx="160"
-                    cy="300"
-                    r="16"
-                    fill="#b3e6ff"
-                    stroke="#3b82f6"
-                    strokeWidth="3"
-                  />
-                  <circle
-                    cx="220"
-                    cy="160"
-                    r="12"
-                    fill="#ffd6e0"
-                    stroke="#e75480"
-                    strokeWidth="2"
-                  />
-                  <circle
-                    cx="300"
-                    cy="100"
-                    r="10"
-                    fill="#c2f9ef"
-                    stroke="#38b2ac"
-                    strokeWidth="2"
-                  />
-                </g>
-                {/* Flower centers */}
-                <circle cx="60" cy="580" r="5" fill="#e75480" />
-                <circle cx="80" cy="420" r="4" fill="#e7b54a" />
-                <circle cx="160" cy="300" r="5" fill="#3b82f6" />
-                <circle cx="220" cy="160" r="3" fill="#e75480" />
-                <circle cx="300" cy="100" r="3" fill="#38b2ac" />
-              </svg>
-              {/* Right detailed flower vine */}
-              <svg
-                className="absolute right-0 bottom-0 z-0 opacity-40"
-                width="320"
-                height="600"
-                viewBox="0 0 320 600"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ pointerEvents: "none" }}
-              >
-                <path
-                  d="M260 20 Q200 100 240 180 Q280 260 160 300 Q40 340 100 440 Q160 540 20 500"
-                  stroke="#7dd87d"
-                  strokeWidth="6"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-                {/* Leaves */}
-                <ellipse
-                  cx="220"
-                  cy="100"
-                  rx="18"
-                  ry="8"
-                  fill="#5cb85c"
-                  transform="rotate(30 220 100)"
-                />
-                <ellipse
-                  cx="180"
-                  cy="250"
-                  rx="14"
-                  ry="7"
-                  fill="#5cb85c"
-                  transform="rotate(-20 180 250)"
-                />
-                <ellipse
-                  cx="120"
-                  cy="350"
-                  rx="16"
-                  ry="8"
-                  fill="#5cb85c"
-                  transform="rotate(15 120 350)"
-                />
-                <ellipse
-                  cx="70"
-                  cy="480"
-                  rx="12"
-                  ry="6"
-                  fill="#5cb85c"
-                  transform="rotate(-10 70 480)"
-                />
-                {/* Flowers */}
-                <g>
-                  <circle
-                    cx="260"
-                    cy="20"
-                    r="18"
-                    fill="#f9c2ff"
-                    stroke="#e75480"
-                    strokeWidth="4"
-                  />
-                  <circle
-                    cx="240"
-                    cy="180"
-                    r="14"
-                    fill="#fff7ae"
-                    stroke="#e7b54a"
-                    strokeWidth="3"
-                  />
-                  <circle
-                    cx="160"
-                    cy="300"
-                    r="16"
-                    fill="#b3e6ff"
-                    stroke="#3b82f6"
-                    strokeWidth="3"
-                  />
-                  <circle
-                    cx="100"
-                    cy="440"
-                    r="12"
-                    fill="#ffd6e0"
-                    stroke="#e75480"
-                    strokeWidth="2"
-                  />
-                  <circle
-                    cx="20"
-                    cy="500"
-                    r="10"
-                    fill="#c2f9ef"
-                    stroke="#38b2ac"
-                    strokeWidth="2"
-                  />
-                </g>
-                {/* Flower centers */}
-                <circle cx="260" cy="20" r="5" fill="#e75480" />
-                <circle cx="240" cy="180" r="4" fill="#e7b54a" />
-                <circle cx="160" cy="300" r="5" fill="#3b82f6" />
-                <circle cx="100" cy="440" r="3" fill="#e75480" />
-                <circle cx="20" cy="500" r="3" fill="#38b2ac" />
-              </svg>
-            </>
-          )}
-
           <motion.h2
             className="text-4xl font-extrabold drop-shadow-lg sm:text-6xl"
             initial={{ opacity: 0, y: 20 }}
@@ -543,9 +346,11 @@ export default function HomePage() {
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-400/20 to-purple-600/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                   <div className="relative mb-4">
-                    <motion.img
+                    <Image
                       src={skill.logo}
                       alt={`${skill.name} logo`}
+                      width={64}
+                      height={64}
                       className="h-16 w-16 transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
@@ -554,8 +359,6 @@ export default function HomePage() {
                           target.nextElementSibling as HTMLElement;
                         if (fallback) fallback.style.display = "block";
                       }}
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
                     />
                     <div
                       className="flex hidden h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-pink-400 to-purple-600 text-lg font-bold text-white shadow-lg"
@@ -570,7 +373,7 @@ export default function HomePage() {
 
                   {/* Floating sparkles */}
                   <div className="pointer-events-none absolute inset-0">
-                    {[...Array(3)].map((_, i) => (
+                    {[0, 1, 2].map((i) => (
                       <motion.div
                         key={i}
                         className="absolute h-1 w-1 rounded-full bg-pink-400"
@@ -614,7 +417,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold text-white">
-                      Hi! I'm Anika Anne
+                      Hi! I&apos;m Anika Anne
                     </h3>
                     <p className="text-lg text-white/80">
                       10th Grader at John Jay High School
@@ -629,13 +432,13 @@ export default function HomePage() {
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
                   <p className="text-lg leading-relaxed text-white/90">
-                    I'm a student at John Jay High School, pursuing my passion
-                    for technology and innovation. With a love for coding in my
-                    free time and hands-on experience with CAD for FTC robotics,
-                    I combine creativity with technical precision. I have strong
-                    skills in web development and 3D modeling, as well as
-                    experience with frameworks like Next.js, React, and CAD
-                    software.
+                    I&apos;m a student at John Jay High School, pursuing my
+                    passion for technology and innovation. With a love for
+                    coding in my free time and hands-on experience with CAD for
+                    FTC robotics, I combine creativity with technical precision.
+                    I have strong skills in web development and 3D modeling, as
+                    well as experience with frameworks like Next.js, React, and
+                    CAD software.
                   </p>
                 </motion.div>
 
@@ -700,7 +503,9 @@ export default function HomePage() {
                 {selectedProject.description}
               </p>
               <div className="mt-4 text-sm">
-                <p className="font-medium text-white">Here's what I did:</p>
+                <p className="font-medium text-white">
+                  Here&apos;s what I did:
+                </p>
                 <ul className="mt-2 list-disc pl-5 text-white/90">
                   {selectedProject.details.map((point, index) => (
                     <li key={index}>{point}</li>
@@ -711,9 +516,11 @@ export default function HomePage() {
 
             {/* Right side: image */}
             <div className="flex flex-shrink-0 items-center justify-center md:w-60">
-              <img
+              <Image
                 src={selectedProject.image}
                 alt={`${selectedProject.title} preview`}
+                width={400}
+                height={240}
                 className="h-48 w-full rounded-xl object-cover shadow-md md:h-60"
               />
             </div>

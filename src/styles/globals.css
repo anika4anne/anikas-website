@@ -110,3 +110,8 @@
 .animate-zoom-in {
   animation: zoom-in 1s ease-out;
 }
+
+html,
+body {
+  background: #fff;
+}
