@@ -1,6 +1,6 @@
-# Create T3 App
+# Anika's Website (My personal website)
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This is a [T3 Stack](https://create.t3.gg/) project created with `create-t3-app`.
 
 You can clone my website with the following commands
 
