@@ -6,17 +6,6 @@ import Image from "next/image";
 
 const projects = [
   {
-    title: "TEDI - The Environmental Defense Initiative",
-    description:
-      "A student-led environmental organization, built with Next.js and Tailwind CSS.",
-    image: "/TEDI.webp",
-    details: [
-      "Used YouTube Data API to fetch playlist items.",
-      "Filtered results and displayed song previews in a game interface.",
-      "Designed with Framer Motion for UI polish.",
-    ],
-  },
-  {
     title: "Guess The Jam",
     description:
       "A music guessing game powered by the YouTube Data API and Next.js",
@@ -28,10 +17,21 @@ const projects = [
     ],
   },
   {
+    title: "TEDI - The Environmental Defense Initiative",
+    description:
+      "A student-led environmental organization, built with Next.js and Tailwind CSS.",
+    image: "/TEDI.webp",
+    details: [
+      "currently I am the Chief Website Designer",
+      "Updated incoming officers",
+      "Designed with Framer Motion for UI polish.",
+    ],
+  },
+  {
     title: "Jaybots CAD",
     description:
-      "3D-modeled and manufactured parts for our FTC robot using OnShape.",
-    image: "",
+      "3D-modeled and manufactured parts for our FTC robot using OnShape (2025-26)",
+    image: "/vw.png",
     details: [
       "Created precise 3D models in OnShape.",
       "Exported STLs and managed 3D printer at competitions.",
@@ -419,6 +419,11 @@ export default function HomePage() {
     };
   }, [clickedHobby]);
 
+  // Memoized click handler to prevent infinite re-renders
+  const handleHobbyClick = useCallback((hobbyIndex: number) => {
+    setClickedHobby((prev) => (prev === hobbyIndex ? null : hobbyIndex));
+  }, []);
+
   return (
     <div className="relative z-0 min-h-screen scroll-smooth text-white">
       <AnimatedBackground gradient={bgGradient} />
@@ -701,8 +706,8 @@ export default function HomePage() {
                 {hobbies.map((hobby, i, arr) => {
                   const angle = (2 * Math.PI * i) / arr.length;
                   const radius = 200;
-                  const x = 300 + radius * Math.cos(angle) - 80;
-                  const y = 300 + radius * Math.sin(angle) - 80;
+                  const x = Math.round(300 + radius * Math.cos(angle) - 80);
+                  const y = Math.round(300 + radius * Math.sin(angle) - 80);
                   const isActive = hoveredHobby === i || clickedHobby === i;
 
                   const showLeft = ["Coding", "Piano", "Volleyball"].includes(
@@ -732,7 +737,7 @@ export default function HomePage() {
                       whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
                       onMouseEnter={() => {
                         setHoveredHobby(i);
-
+                        // Close clicked tooltip when hovering on a different hobby
                         if (clickedHobby !== null && clickedHobby !== i) {
                           setClickedHobby(null);
                         }
@@ -742,11 +747,7 @@ export default function HomePage() {
                           setHoveredHobby(null);
                         }
                       }}
-                      onClick={() => {
-                        if (hoveredHobby === i) {
-                          setClickedHobby(clickedHobby === i ? null : i);
-                        }
-                      }}
+                      onClick={() => handleHobbyClick(i)}
                     >
                       <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-800 to-indigo-800 text-3xl shadow-lg">
                         {hobby.icon}
