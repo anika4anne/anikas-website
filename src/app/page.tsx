@@ -143,7 +143,6 @@ type Project = {
 };
 
 function interpolateColor(color1: string, color2: string, factor: number) {
-  // color1, color2: hex strings, factor: 0-1
   const hexReg = /#(..)(..)(..)/;
   const c1Match = hexReg.exec(color1);
   const c2Match = hexReg.exec(color2);
@@ -171,7 +170,7 @@ function useSectionScrollGradients(
     (): [string, string, string] => ["#1e1b4b", "#1e1b4b", "#1e1b4b"],
     [],
   );
-  // Helper to ensure a [string, string, string] gradient
+
   const getSafeGradient = useCallback(
     (arr: unknown): [string, string, string] => {
       return Array.isArray(arr) &&
@@ -207,7 +206,7 @@ function useSectionScrollGradients(
           }
         }
       }
-      // Interpolate between gradients
+
       let t = 0;
       const curr = sectionRefs.current[idx];
       const next = sectionRefs.current[idx + 1];
@@ -240,21 +239,16 @@ function useSectionScrollGradients(
 }
 
 function AnimatedBackground({ gradient }: { gradient: string[] }) {
-  // Sparkles and floating shapes for the hero section only
   return (
     <div
       className="fixed inset-0 -z-10 h-full w-full transition-colors duration-700"
       style={{
         background: `linear-gradient(135deg, ${gradient[0]}, ${gradient[1]}, ${gradient[2]})`,
       }}
-    >
-      {/* Sparkles and shapes only for the top section */}
-      {/* Optionally, you can add sparkles for all sections or just the first */}
-    </div>
+    ></div>
   );
 }
 
-// Add this hobbies array at the top level, outside the component
 const hobbies = [
   {
     icon: "💃",
@@ -286,7 +280,7 @@ const hobbies = [
     achievements: [
       {
         year: "2025",
-        title: "Worlds Championship",
+        title: "FTC Worlds Championship",
         description: "Team Won Judge's Choice Award",
       },
       {
@@ -331,23 +325,43 @@ const hobbies = [
     icon: "🎹",
     label: "Piano",
     centerImage: "/piano.png",
-    achievements: [],
+    achievements: [
+      {
+        year: "2025",
+        title: "Piano Teacher",
+        description: "Recently started teaching younger kids piano",
+      },
+      {
+        year: "2023",
+        title: "Baby Grand Piano Gift",
+        description:
+          "I was generously gifted a baby grand piano by a former pianist, making it even more meaningful to me",
+      },
+      {
+        year: "2015",
+        title: "First Solo Performance",
+        description:
+          "At the age of 5, I played the piece 'Twinkle Twinkle Little Star' for my school",
+      },
+    ],
     backText: "Playing piano helps me express my emotions through music.",
   },
   {
     icon: "💻",
     label: "Coding",
-    centerImage: "/reading.jpg",
+    centerImage: "/code.jpg",
     achievements: [
       {
-        year: "2024",
-        title: "Built Personal Website",
-        description: "Designed and coded from scratch using Next.js",
+        year: "2025",
+        title: "Built Websites for School Clubs,",
+        description:
+          "Designed and coded from scratch using Next.js, ex. jjhs.scioly.org, jjhs.mindnmethod.org",
       },
       {
-        year: "2023",
-        title: "Hackathon Winner",
-        description: "1st Place, Local Youth Hackathon",
+        year: "2021",
+        title: "Arduino Plant Monitor",
+        description:
+          "Used a water sensor to detect if a plant needed water and automatically watered my plants",
       },
     ],
     backText: "Books open up new worlds and ideas for me.",
@@ -356,7 +370,24 @@ const hobbies = [
     icon: "🎤",
     label: "Singing",
     centerImage: "/sing.png",
-    achievements: [],
+    achievements: [
+      {
+        year: "2025",
+        title: "Completed 5 Thyagaraja Kritis,",
+        description: "Completed Carnatic Vocal Training, and l",
+      },
+      {
+        year: "2023",
+        title: "Completed Varnaalu, Swarajathulu, Keerthanaalu",
+        description:
+          "Marks a milestone in my journey, as I am heading towards graduation",
+      },
+      {
+        year: "2017",
+        title: "First Solo Performance",
+        description: "At age of seven, performed 'MuddhuGaare Yashoda'",
+      },
+    ],
     backText: "Singing brings me joy and confidence.",
   },
 ];
@@ -367,11 +398,31 @@ export default function HomePage() {
   const gradients = sections.map((s) => s.gradient);
   const bgGradient = useSectionScrollGradients(sectionIds, gradients);
   const [hoveredHobby, setHoveredHobby] = useState<number | null>(null);
+  const [clickedHobby, setClickedHobby] = useState<number | null>(null);
+
+  // Click outside handler to close clicked tooltip
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      // Check if click is outside of any hobby circle or tooltip
+      if (!target.closest(".hobby-circle") && !target.closest(".tooltip-box")) {
+        setClickedHobby(null);
+      }
+    };
+
+    if (clickedHobby !== null) {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [clickedHobby]);
 
   return (
     <div className="relative z-0 min-h-screen scroll-smooth text-white">
       <AnimatedBackground gradient={bgGradient} />
-      {/* Header */}
+
       <header className="fixed top-0 z-50 w-full bg-transparent text-white backdrop-blur-md">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <motion.div
@@ -408,7 +459,7 @@ export default function HomePage() {
           </ul>
         </nav>
       </header>
-      {/* Page Sections */}
+
       {sections.map((section) => (
         <section
           key={section.id}
@@ -468,7 +519,6 @@ export default function HomePage() {
                     boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
                   }}
                 >
-                  {/* Glowing effect on hover */}
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-600/20 to-indigo-600/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                   <div className="relative mb-4">
@@ -497,7 +547,6 @@ export default function HomePage() {
                     {skill.name}
                   </h3>
 
-                  {/* Floating sparkles */}
                   <div className="pointer-events-none absolute inset-0">
                     {[0, 1, 2].map((i) => (
                       <motion.div
@@ -532,7 +581,6 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                {/* Hero section with larger profile */}
                 <motion.div
                   className="flex flex-col items-center space-y-6 text-center"
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -552,7 +600,6 @@ export default function HomePage() {
                   </div>
                 </motion.div>
 
-                {/* Enhanced description */}
                 <motion.div
                   className="max-w-4xl text-center"
                   initial={{ opacity: 0, y: 20 }}
@@ -574,7 +621,6 @@ export default function HomePage() {
                   </p>
                 </motion.div>
 
-                {/* Enhanced tags with better styling */}
                 <motion.div
                   className="flex flex-wrap justify-center gap-4"
                   initial={{ opacity: 0, y: 20 }}
@@ -601,7 +647,6 @@ export default function HomePage() {
                   </span>
                 </motion.div>
 
-                {/* Call to action */}
                 <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
@@ -632,42 +677,47 @@ export default function HomePage() {
           {section.id === "hobbies" && (
             <div className="mt-12 w-full max-w-5xl">
               <div className="relative mx-auto h-[600px] w-[600px]">
-                {/* Central image appears when a hobby is hovered */}
-                {hoveredHobby !== null && hobbies[hoveredHobby] && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="pointer-events-none absolute top-1/2 left-1/2 z-10 flex h-48 w-48 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 shadow-xl backdrop-blur-lg"
-                  >
-                    <img
-                      src={hobbies[hoveredHobby].centerImage}
-                      alt={hobbies[hoveredHobby].label}
-                      className="h-40 w-40 rounded-full object-cover"
-                    />
-                  </motion.div>
-                )}
+                {(hoveredHobby !== null || clickedHobby !== null) &&
+                  (() => {
+                    const activeHobby = hoveredHobby ?? clickedHobby;
+                    return (
+                      activeHobby !== null &&
+                      hobbies[activeHobby] && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.4, ease: "easeOut" }}
+                          className="pointer-events-none absolute top-1/2 left-1/2 z-10 flex h-48 w-48 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 shadow-xl backdrop-blur-lg"
+                        >
+                          <img
+                            src={hobbies[activeHobby].centerImage}
+                            alt={hobbies[activeHobby].label}
+                            className="h-40 w-40 rounded-full object-cover"
+                          />
+                        </motion.div>
+                      )
+                    );
+                  })()}
                 {hobbies.map((hobby, i, arr) => {
                   const angle = (2 * Math.PI * i) / arr.length;
                   const radius = 200;
                   const x = 300 + radius * Math.cos(angle) - 80;
                   const y = 300 + radius * Math.sin(angle) - 80;
-                  const isActive = hoveredHobby === i;
-                  // Tooltip direction logic
+                  const isActive = hoveredHobby === i || clickedHobby === i;
+
                   const showLeft = ["Coding", "Piano", "Volleyball"].includes(
                     hobby.label,
                   );
-                  // Determine which circles to hide based on tooltip position
+
                   const shouldHide =
                     hoveredHobby !== null &&
                     hoveredHobby !== i &&
-                    ((showLeft && i < 3) || // Hide left circles when left tooltip is shown
-                      (!showLeft && i >= 3)); // Hide right circles when right tooltip is shown
+                    ((showLeft && i < 3) || (!showLeft && i >= 3));
 
                   return (
                     <motion.div
                       key={hobby.label}
-                      className={`absolute flex h-40 w-40 flex-col items-center justify-center rounded-full border border-white/10 bg-white/10 backdrop-blur-lg transition-all duration-300 hover:scale-105 ${shouldHide ? "pointer-events-none opacity-0" : ""}`}
+                      className={`hobby-circle absolute flex h-40 w-40 flex-col items-center justify-center rounded-full border border-white/10 bg-white/10 backdrop-blur-lg transition-all duration-300 hover:scale-105 ${shouldHide ? "pointer-events-none opacity-0" : ""}`}
                       style={{ left: x, top: y, zIndex: isActive ? 20 : 10 }}
                       initial={{ opacity: 0, scale: 0.5 }}
                       whileInView={{
@@ -680,8 +730,23 @@ export default function HomePage() {
                         },
                       }}
                       whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
-                      onMouseEnter={() => setHoveredHobby(i)}
-                      onMouseLeave={() => setHoveredHobby(null)}
+                      onMouseEnter={() => {
+                        setHoveredHobby(i);
+
+                        if (clickedHobby !== null && clickedHobby !== i) {
+                          setClickedHobby(null);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        if (clickedHobby !== i) {
+                          setHoveredHobby(null);
+                        }
+                      }}
+                      onClick={() => {
+                        if (hoveredHobby === i) {
+                          setClickedHobby(clickedHobby === i ? null : i);
+                        }
+                      }}
                     >
                       <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-800 to-indigo-800 text-3xl shadow-lg">
                         {hobby.icon}
@@ -689,12 +754,11 @@ export default function HomePage() {
                       <h3 className="text-center text-base font-bold text-white">
                         {hobby.label}
                       </h3>
-                      {/* Tooltip box appears to the right or left of the hovered circle */}
+
                       {isActive && (
                         <div
                           className={`absolute top-1/2 z-30 flex -translate-y-1/2 items-center ${showLeft ? "right-full mr-6 flex-row-reverse" : "left-full ml-6"}`}
                         >
-                          {/* SVG Arrow for a natural bubble look */}
                           <svg
                             width="24"
                             height="48"
@@ -710,9 +774,14 @@ export default function HomePage() {
                               fill="rgba(255,255,255,0.10)"
                             />
                           </svg>
-                          {/* Box */}
+
                           <div
-                            className={`overflow-y-auto rounded-2xl bg-white/10 px-6 py-4 text-base font-semibold text-white shadow-xl backdrop-blur-lg ${hobby.label === "Volleyball" ? "max-h-[32rem] max-w-xl" : "max-h-96 max-w-xs"}`}
+                            className={`tooltip-box overflow-y-auto rounded-2xl bg-white/10 px-6 py-4 text-base font-semibold text-white shadow-xl backdrop-blur-lg ${hobby.label === "Volleyball" ? "max-h-96" : "max-h-96 max-w-xs"}`}
+                            style={
+                              hobby.label === "Volleyball"
+                                ? { maxWidth: "36rem" }
+                                : {}
+                            }
                           >
                             {hobby.achievements &&
                             hobby.achievements.length > 0 ? (
@@ -720,7 +789,7 @@ export default function HomePage() {
                                 <h4 className="mb-2 text-lg font-bold text-white">
                                   Achievements
                                 </h4>
-                                {/* Years badge for all hobbies with more than one achievement */}
+
                                 {hobby.achievements.length > 1 &&
                                   (() => {
                                     const years = hobby.achievements
@@ -740,7 +809,6 @@ export default function HomePage() {
                                     );
                                   })()}
                                 <ol className="relative pl-0">
-                                  {/* Timeline vertical line, absolutely positioned in the center of the timeline column */}
                                   <div
                                     className="absolute top-0 left-6 z-0 h-full w-0.5 bg-white/30"
                                     style={{ left: "32px" }}
@@ -750,18 +818,16 @@ export default function HomePage() {
                                       key={idx}
                                       className="relative mb-10 flex items-start last:mb-0"
                                     >
-                                      {/* Timeline column: dot and line */}
                                       <div className="relative z-10 flex w-16 min-w-[64px] flex-col items-center">
                                         <span className="mt-0.5 h-4 w-4 rounded-full border-2 border-white bg-purple-400"></span>
-                                        {/* Optionally, add connecting lines above/below the dot for multi-item timelines */}
                                       </div>
-                                      {/* Year column */}
+
                                       <div className="ml-2 flex w-12 min-w-[48px] items-center">
                                         <span className="text-[11px] font-semibold text-purple-200">
                                           {ach.year}
                                         </span>
                                       </div>
-                                      {/* Content column */}
+
                                       <div className="ml-2">
                                         <div className="mt-0.5 text-sm font-bold text-white">
                                           {ach.title}
@@ -780,7 +846,6 @@ export default function HomePage() {
                                   Achievements
                                 </h4>
                                 <ol className="relative pl-0">
-                                  {/* Timeline vertical line, absolutely positioned in the center of the timeline column */}
                                   <div
                                     className="absolute top-0 left-6 z-0 h-full w-0.5 bg-white/30"
                                     style={{ left: "32px" }}
@@ -815,7 +880,6 @@ export default function HomePage() {
         </section>
       ))}
 
-      {/* Modal */}
       {selectedProject && (
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
@@ -823,17 +887,14 @@ export default function HomePage() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {/* Siri-style animated background */}
           <div className="absolute inset-0 -z-10 animate-[gradient_8s_ease_in_out_infinite] bg-gradient-to-br from-purple-800 via-indigo-800 to-slate-900 bg-[length:300%_300%] opacity-20 blur-3xl" />
 
-          {/* Modal box */}
           <motion.div
             className="relative mx-4 flex w-full max-w-4xl flex-col gap-6 rounded-2xl border border-white/30 bg-white/10 p-6 text-white shadow-2xl backdrop-blur-xl sm:mx-6 md:mx-auto md:flex-row"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
           >
-            {/* Close button */}
             <button
               onClick={() => setSelectedProject(null)}
               className="absolute top-4 right-4 text-xl font-bold text-white hover:text-purple-300"
@@ -841,7 +902,6 @@ export default function HomePage() {
               ×
             </button>
 
-            {/* Left side: text content */}
             <div className="flex-1">
               <h2 className="text-2xl font-bold">{selectedProject.title}</h2>
               <p className="mt-4 text-sm text-white/90">
@@ -859,7 +919,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right side: image */}
             <div className="flex flex-shrink-0 items-center justify-center md:w-[400px]">
               <Image
                 src={selectedProject.image}
