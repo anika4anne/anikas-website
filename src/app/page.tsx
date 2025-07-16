@@ -259,37 +259,70 @@ const hobbies = [
   {
     icon: "💃",
     label: "Dancing",
-    centerImage: "/dance.png", // Replace with your image or use a placeholder
+    centerImage: "/dance.png",
+    achievements: [
+      {
+        year: "2026",
+        title: "Kuchipudi Rangapravesam",
+        description: "Solo debut performance (Graduation)",
+      },
+      {
+        year: "2022",
+        title: "State Dance Competition Winner",
+        description: "1st Place, Classical",
+      },
+      {
+        year: "2014",
+        title: "First Performance",
+        description: "At age of 4, performed dance at temple",
+      },
+    ],
     backText: "I love to dance! It keeps me active and creative.",
   },
   {
     icon: "🎨",
     label: "Art",
     centerImage: "/art.jpg",
+    achievements: [],
     backText: "Drawing and painting are my favorite ways to relax.",
   },
   {
-    icon: "📸",
-    label: "Photography",
-    centerImage: "/photography.jpg",
+    icon: "🏐",
+    label: "Volleyball",
+    centerImage: "/volleyball.jpg",
+    achievements: [],
     backText: "Capturing moments through my lens is magical.",
   },
   {
     icon: "🎹",
     label: "Piano",
     centerImage: "/piano.jpg",
+    achievements: [],
     backText: "Playing piano helps me express my emotions through music.",
   },
   {
-    icon: "📚",
-    label: "Reading",
+    icon: "💻",
+    label: "Coding",
     centerImage: "/reading.jpg",
+    achievements: [
+      {
+        year: "2024",
+        title: "Built Personal Website",
+        description: "Designed and coded from scratch using Next.js",
+      },
+      {
+        year: "2023",
+        title: "Hackathon Winner",
+        description: "1st Place, Local Youth Hackathon",
+      },
+    ],
     backText: "Books open up new worlds and ideas for me.",
   },
   {
     icon: "🎤",
     label: "Singing",
-    centerImage: "/singing.jpg",
+    centerImage: "/sing.png",
+    achievements: [],
     backText: "Singing brings me joy and confidence.",
   },
 ];
@@ -567,13 +600,18 @@ export default function HomePage() {
               <div className="relative mx-auto h-[600px] w-[600px]">
                 {/* Central image appears when a hobby is hovered */}
                 {hoveredHobby !== null && hobbies[hoveredHobby] && (
-                  <div className="pointer-events-none absolute top-1/2 left-1/2 z-10 flex h-48 w-48 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 shadow-xl backdrop-blur-lg">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    className="pointer-events-none absolute top-1/2 left-1/2 z-10 flex h-48 w-48 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 shadow-xl backdrop-blur-lg"
+                  >
                     <img
                       src={hobbies[hoveredHobby].centerImage}
                       alt={hobbies[hoveredHobby].label}
                       className="h-40 w-40 rounded-full object-cover"
                     />
-                  </div>
+                  </motion.div>
                 )}
                 {hobbies.map((hobby, i, arr) => {
                   const angle = (2 * Math.PI * i) / arr.length;
@@ -625,7 +663,50 @@ export default function HomePage() {
                           </svg>
                           {/* Box */}
                           <div className="ml-1 max-w-xs rounded-2xl bg-white/10 px-6 py-4 text-base font-semibold text-white shadow-xl backdrop-blur-lg">
-                            {hobby.backText}
+                            {hobby.achievements &&
+                            hobby.achievements.length > 0 ? (
+                              <div className="flex flex-col gap-4">
+                                <h4 className="mb-2 text-lg font-bold text-white">
+                                  Achievements
+                                </h4>
+                                {/* Years dancing badge for Dancing only */}
+                                {hobby.label === "Dancing" &&
+                                  (() => {
+                                    const years = hobby.achievements
+                                      .map((a) => parseInt(a.year))
+                                      .filter(Boolean);
+                                    const minYear = Math.min(...years);
+                                    const now = new Date().getFullYear();
+                                    const diff = minYear && now - minYear + 1;
+                                    return (
+                                      diff && (
+                                        <div className="mx-auto mb-3 w-fit rounded-full bg-purple-600/80 px-4 py-1 text-center text-sm font-bold text-white shadow">
+                                          Dancing for {diff} year
+                                          {diff > 1 ? "s" : ""}
+                                        </div>
+                                      )
+                                    );
+                                  })()}
+                                <ol className="relative border-l-2 border-white/30 pl-8">
+                                  {hobby.achievements.map((ach, idx) => (
+                                    <li key={idx} className="mb-10 last:mb-0 relative flex">
+                                      {/* Timeline dot, perfectly centered on the line */}
+                                      <span className="absolute left-0 top-0 flex h-full w-8 justify-center">
+                                        <span className="relative z-10 mt-0.5 h-4 w-4 rounded-full bg-purple-400 border-2 border-white" style={{ left: '-2px' }}></span>
+                                      </span>
+                                      {/* Achievement content, moved down */}
+                                      <div className="mt-3">
+                                        <span className="text-xs text-purple-200 font-semibold">{ach.year}</span>
+                                        <div className="text-base font-bold text-white mt-1">{ach.title}</div>
+                                        <div className="text-sm text-white/80">{ach.description}</div>
+                                      </div>
+                                    </li>
+                                  ))}
+                                </ol>
+                              </div>
+                            ) : (
+                              <div>{hobby.backText}</div>
+                            )}
                           </div>
                         </div>
                       )}
