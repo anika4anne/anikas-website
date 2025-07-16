@@ -399,6 +399,7 @@ export default function HomePage() {
   const bgGradient = useSectionScrollGradients(sectionIds, gradients);
   const [hoveredHobby, setHoveredHobby] = useState<number | null>(null);
   const [clickedHobby, setClickedHobby] = useState<number | null>(null);
+  const [projectsVisible, setProjectsVisible] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -487,7 +488,15 @@ export default function HomePage() {
           </motion.p>
 
           {section.id === "projects" && (
-            <div className="mt-12 grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2">
+            <motion.div
+              className="mt-12 grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{
+                opacity: projectsVisible ? 1 : 0,
+                y: projectsVisible ? 0 : 20,
+              }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
               {projects.map((project) => (
                 <motion.a
                   key={project.title}
@@ -504,7 +513,7 @@ export default function HomePage() {
                   </p>
                 </motion.a>
               ))}
-            </div>
+            </motion.div>
           )}
 
           {section.id === "skills" && (
@@ -659,7 +668,18 @@ export default function HomePage() {
                   <p className="mb-4 text-lg text-white/70">
                     Scroll down to explore my skills and projects
                   </p>
-                  <div className="flex justify-center">
+                  <div className="flex justify-center space-x-4">
+                    <motion.a
+                      href="#projects"
+                      onClick={() => {
+                        setTimeout(() => setProjectsVisible(true), 100);
+                      }}
+                      className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-indigo-700"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      View Projects
+                    </motion.a>
                     <motion.div
                       className="flex h-10 w-6 justify-center rounded-full border-2 border-white/30"
                       animate={{ y: [0, 10, 0] }}
