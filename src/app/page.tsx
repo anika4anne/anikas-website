@@ -306,7 +306,25 @@ const hobbies = [
     icon: "🏐",
     label: "Volleyball",
     centerImage: "/vb.png",
-    achievements: [],
+    achievements: [
+      {
+        year: "2025",
+        title: "Lefty Setter",
+        description: "Evolved from a right-side hitter to setter",
+      },
+      {
+        year: "2023",
+        title: "School Team (8th Grade)",
+        description:
+          "Made the team in 8th grade after spending the summer training following a 7th grade cut.",
+      },
+      {
+        year: "2021",
+        title: "Backyard Volleyball (6th Grade)",
+        description:
+          "Learned volleyball during COVID from a high school neighbor",
+      },
+    ],
     backText: "Capturing moments through my lens is magical.",
   },
   {
@@ -639,10 +657,17 @@ export default function HomePage() {
                   const showLeft = ["Coding", "Piano", "Volleyball"].includes(
                     hobby.label,
                   );
+                  // Determine which circles to hide based on tooltip position
+                  const shouldHide =
+                    hoveredHobby !== null &&
+                    hoveredHobby !== i &&
+                    ((showLeft && i < 3) || // Hide left circles when left tooltip is shown
+                      (!showLeft && i >= 3)); // Hide right circles when right tooltip is shown
+
                   return (
                     <motion.div
                       key={hobby.label}
-                      className="absolute flex h-40 w-40 flex-col items-center justify-center rounded-full border border-white/10 bg-white/10 backdrop-blur-lg transition-all duration-300 hover:scale-105"
+                      className={`absolute flex h-40 w-40 flex-col items-center justify-center rounded-full border border-white/10 bg-white/10 backdrop-blur-lg transition-all duration-300 hover:scale-105 ${shouldHide ? "pointer-events-none opacity-0" : ""}`}
                       style={{ left: x, top: y, zIndex: isActive ? 20 : 10 }}
                       initial={{ opacity: 0, scale: 0.5 }}
                       whileInView={{
@@ -686,7 +711,9 @@ export default function HomePage() {
                             />
                           </svg>
                           {/* Box */}
-                          <div className="max-h-96 max-w-xs overflow-y-auto rounded-2xl bg-white/10 px-6 py-4 text-base font-semibold text-white shadow-xl backdrop-blur-lg">
+                          <div
+                            className={`overflow-y-auto rounded-2xl bg-white/10 px-6 py-4 text-base font-semibold text-white shadow-xl backdrop-blur-lg ${hobby.label === "Volleyball" ? "max-h-[32rem] max-w-xl" : "max-h-96 max-w-xs"}`}
+                          >
                             {hobby.achievements &&
                             hobby.achievements.length > 0 ? (
                               <div className="flex flex-col gap-4">
