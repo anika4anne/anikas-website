@@ -7,47 +7,43 @@ import Image from "next/image";
 const projects = [
   {
     title: "Guess The Jam",
-    description:
-      "A music guessing game powered by the YouTube Data API and Next.js",
+    description: "A music guessing game made with YouTube Data API and Next.js",
     image: "/guess-the-jam.png",
     details: [
       "Used YouTube Data API to fetch playlist items.",
-      "Filtered results and displayed song previews in a game interface.",
-      "Designed with Framer Motion for UI polish.",
+      "Filtered results and displayed song previews",
     ],
   },
   {
     title: "TEDI - The Environmental Defense Initiative",
     description:
-      "A student-led environmental organization, built with Next.js and Tailwind CSS.",
+      "A student-led environmental organization, website built to raise awareness",
     image: "/TEDI.webp",
     details: [
       "currently I am the Chief Website Designer",
       "Updated incoming officers",
-      "Designed with Framer Motion for UI polish.",
     ],
   },
   {
     title: "Jaybots CAD",
     description:
-      "3D-modeled and manufactured parts for our FTC robot using OnShape (2025-26)",
+      "3D-modeled and manufactured parts for FTC robot using OnShape (2025-26)",
     image: "/vw.png",
     details: [
       "Created precise 3D models in OnShape.",
       "Exported STLs and managed 3D printer at competitions.",
-
       "Led workshops for students on manufacturing in STEM.",
     ],
   },
   {
     title: "Science Olympiad Site",
     description:
-      "Responsive site built in Next.js to manage events, newsletters, and alumni filtering.",
+      "Website for Science Olympiad Club at my school to help students prepare for competitions",
     image: "/scioly.png",
     details: [
-      "Built filterable and newsletter sections with dynamic routing.",
-      "Used Tailwind and Next.js App Router.",
-      "Designed responsive layouts with smooth animations.",
+      "AI-generated practice tests based on student's weaknesses",
+      "Used Tailwind and Next.js App Router",
+      "Designed to be user-friendly",
     ],
   },
 ];
@@ -259,11 +255,6 @@ const hobbies = [
         year: "2026",
         title: "Kuchipudi Rangapravesam",
         description: "Solo debut performance (Graduation)",
-      },
-      {
-        year: "2022",
-        title: "State Dance Competition Winner",
-        description: "1st Place, Classical",
       },
       {
         year: "2014",
@@ -491,10 +482,7 @@ export default function HomePage() {
             <motion.div
               className="mt-12 grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2"
               initial={{ opacity: 0, y: 20 }}
-              animate={{
-                opacity: projectsVisible ? 1 : 0,
-                y: projectsVisible ? 0 : 20,
-              }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               {projects.map((project) => (

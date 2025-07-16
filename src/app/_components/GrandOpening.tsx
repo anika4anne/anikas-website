@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// SVG flower inspired by the new image (5-petal, pink/orange/yellow)
+
 function PlumeriaFlower({
   style = {},
   ...props
@@ -21,7 +21,7 @@ function PlumeriaFlower({
       {...props}
     >
       <g>
-        {/* 5 petals */}
+  
         {Array.from({ length: 5 }).map((_, i) => {
           const angle = (i * 360) / 5;
           return (
@@ -35,7 +35,7 @@ function PlumeriaFlower({
             />
           );
         })}
-        {/* Petal gradient */}
+     
         <defs>
           <radialGradient id="petalGradient" cx="50%" cy="50%" r="60%">
             <stop offset="0%" stopColor="#fffbe6" />
@@ -43,7 +43,7 @@ function PlumeriaFlower({
             <stop offset="100%" stopColor="#f78ca2" />
           </radialGradient>
         </defs>
-        {/* Yellow center */}
+    
         <circle
           cx="20"
           cy="20"
@@ -64,16 +64,16 @@ export default function GrandOpening({ onFinish }: { onFinish?: () => void }) {
   const [flowersIn, setFlowersIn] = useState(0);
   const [showRibbon, setShowRibbon] = useState(false);
 
-  // Animate flowers one by one
+
   useEffect(() => {
     if (!show) return;
     if (flowersIn < NUM_FLOWERS) {
       const t = setTimeout(() => setFlowersIn(flowersIn + 1), 120);
       return () => clearTimeout(t);
     } else {
-      // After all flowers, show ribbon
+
       const t = setTimeout(() => setShowRibbon(true), 500);
-      // Hide after a bit
+ 
       const t2 = setTimeout(() => {
         setShow(false);
         onFinish?.();
@@ -85,7 +85,7 @@ export default function GrandOpening({ onFinish }: { onFinish?: () => void }) {
     }
   }, [flowersIn, show, onFinish]);
 
-  // Arrange flowers in a circle
+
   const flowers = Array.from({ length: NUM_FLOWERS }, (_, i) => {
     const angle = (2 * Math.PI * i) / NUM_FLOWERS;
     const r = 36;
@@ -120,7 +120,7 @@ export default function GrandOpening({ onFinish }: { onFinish?: () => void }) {
               pointerEvents: "none",
             }}
           >
-            {/* Flowers in a circle */}
+         
             {flowers.map((f, i) => (
               <motion.g
                 key={i}
@@ -145,7 +145,7 @@ export default function GrandOpening({ onFinish }: { onFinish?: () => void }) {
                 </foreignObject>
               </motion.g>
             ))}
-            {/* Ribbon in the center */}
+       
             {showRibbon && (
               <motion.path
                 d="M50 20 Q55 50 50 80 Q45 50 50 20 Z"

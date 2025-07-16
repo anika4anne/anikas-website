@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// SVG flower inspired by the attached image (5-petal, pink/orange/yellow, outlined)
+
 function SmallFlower({ x, y }: { x: number; y: number }) {
   return (
     <g transform={`translate(${x}, ${y})`}>
-      {/* 5 petals */}
+
       {Array.from({ length: 5 }).map((_, i) => {
         const angle = (i * 360) / 5;
         return (
@@ -21,7 +21,7 @@ function SmallFlower({ x, y }: { x: number; y: number }) {
           />
         );
       })}
-      {/* Yellow center */}
+
       <circle
         cx="0"
         cy="0"
@@ -40,14 +40,14 @@ export default function OpeningSlide({ onFinish }: { onFinish?: () => void }) {
   const [show, setShow] = useState(true);
   const [flowersIn, setFlowersIn] = useState(0);
 
-  // Animate flowers one by one
+
   useEffect(() => {
     if (!show) return;
     if (flowersIn < NUM_FLOWERS) {
       const t = setTimeout(() => setFlowersIn(flowersIn + 1), 100);
       return () => clearTimeout(t);
     } else {
-      // After all flowers, wait a bit then dismiss
+
       const t = setTimeout(() => {
         setShow(false);
         onFinish?.();
@@ -56,7 +56,6 @@ export default function OpeningSlide({ onFinish }: { onFinish?: () => void }) {
     }
   }, [flowersIn, show, onFinish]);
 
-  // Arrange flowers in a circle around the center
   const flowers = Array.from({ length: NUM_FLOWERS }, (_, i) => {
     const angle = (2 * Math.PI * i) / NUM_FLOWERS;
     const r = 35; // Circle radius
@@ -75,7 +74,6 @@ export default function OpeningSlide({ onFinish }: { onFinish?: () => void }) {
           transition={{ duration: 0.8 }}
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-sm"
         >
-          {/* Greeting in the center */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -87,7 +85,7 @@ export default function OpeningSlide({ onFinish }: { onFinish?: () => void }) {
             </h1>
           </motion.div>
 
-          {/* Flowers around the greeting */}
+
           <svg
             width="100vw"
             height="100vh"
@@ -100,7 +98,7 @@ export default function OpeningSlide({ onFinish }: { onFinish?: () => void }) {
               pointerEvents: "none",
             }}
           >
-            {/* Petal gradient definition */}
+
             <defs>
               <radialGradient id="smallPetalGradient" cx="50%" cy="50%" r="60%">
                 <stop offset="0%" stopColor="#fffbe6" />
