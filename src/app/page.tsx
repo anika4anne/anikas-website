@@ -332,16 +332,15 @@ const hobbies = [
         description: "Recently started teaching younger kids piano",
       },
       {
-        year: "2023",
+        year: "2024",
         title: "Baby Grand Piano Gift",
-        description:
-          "I was generously gifted a baby grand piano by a former pianist, making it even more meaningful to me",
+        description: "Gifted a baby grand piano for my 13th birthday",
       },
       {
-        year: "2015",
+        year: "2014",
         title: "First Solo Performance",
         description:
-          "At the age of 5, I played the piece 'Twinkle Twinkle Little Star' for my school",
+          "At the age of 4, I played the piece 'Twinkle Twinkle Little Star' for my school",
       },
     ],
     backText: "Playing piano helps me express my emotions through music.",
@@ -372,9 +371,10 @@ const hobbies = [
     centerImage: "/sing.png",
     achievements: [
       {
-        year: "2025",
-        title: "Completed 5 Thyagaraja Kritis,",
-        description: "Completed Carnatic Vocal Training, and l",
+        year: "2026",
+        title: "Completed Pancharatna Kritis",
+        description:
+          "Completed Carnatic Vocal Training, and reached the highest level of music",
       },
       {
         year: "2023",
@@ -400,11 +400,10 @@ export default function HomePage() {
   const [hoveredHobby, setHoveredHobby] = useState<number | null>(null);
   const [clickedHobby, setClickedHobby] = useState<number | null>(null);
 
-  // Click outside handler to close clicked tooltip
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      // Check if click is outside of any hobby circle or tooltip
+
       if (!target.closest(".hobby-circle") && !target.closest(".tooltip-box")) {
         setClickedHobby(null);
       }
@@ -419,7 +418,6 @@ export default function HomePage() {
     };
   }, [clickedHobby]);
 
-  // Memoized click handler to prevent infinite re-renders
   const handleHobbyClick = useCallback((hobbyIndex: number) => {
     setClickedHobby((prev) => (prev === hobbyIndex ? null : hobbyIndex));
   }, []);
@@ -682,6 +680,12 @@ export default function HomePage() {
           {section.id === "hobbies" && (
             <div className="mt-12 w-full max-w-5xl">
               <div className="relative mx-auto h-[600px] w-[600px]">
+                {/* Instruction text */}
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-center">
+                  <p className="text-lg font-medium text-white/70">
+                    👇 Hover over the circles to see achievements
+                  </p>
+                </div>
                 {(hoveredHobby !== null || clickedHobby !== null) &&
                   (() => {
                     const activeHobby = hoveredHobby ?? clickedHobby;
@@ -737,7 +741,7 @@ export default function HomePage() {
                       whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
                       onMouseEnter={() => {
                         setHoveredHobby(i);
-                        // Close clicked tooltip when hovering on a different hobby
+
                         if (clickedHobby !== null && clickedHobby !== i) {
                           setClickedHobby(null);
                         }
