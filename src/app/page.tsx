@@ -6,6 +6,17 @@ import Image from "next/image";
 
 const projects = [
   {
+    title: "TEDI - The Environmental Defense Initiative",
+    description:
+      "A student-led environmental organization, built with Next.js and Tailwind CSS.",
+    image: "/TEDI.webp",
+    details: [
+      "Used YouTube Data API to fetch playlist items.",
+      "Filtered results and displayed song previews in a game interface.",
+      "Designed with Framer Motion for UI polish.",
+    ],
+  },
+  {
     title: "Guess The Jam",
     description:
       "A music guessing game powered by the YouTube Data API and Next.js",
@@ -24,6 +35,7 @@ const projects = [
     details: [
       "Created precise 3D models in OnShape.",
       "Exported STLs and managed 3D printer at competitions.",
+
       "Led workshops for students on manufacturing in STEM.",
     ],
   },
@@ -543,13 +555,13 @@ export default function HomePage() {
             </div>
 
             {/* Right side: image */}
-            <div className="flex flex-shrink-0 items-center justify-center md:w-60">
+            <div className="flex flex-shrink-0 items-center justify-center md:w-[400px]">
               <Image
                 src={selectedProject.image}
                 alt={`${selectedProject.title} preview`}
-                width={400}
-                height={240}
-                className="h-48 w-full rounded-xl object-cover shadow-md md:h-60"
+                width={600}
+                height={400}
+                className="h-64 w-full rounded-xl object-cover shadow-md md:h-80"
               />
             </div>
           </motion.div>
