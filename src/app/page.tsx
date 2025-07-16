@@ -117,14 +117,21 @@ const sections = [
     title: "Skills",
     subtitle:
       "Familiar with a variety of programming languages and tools, including Python, JavaScript, React, Node.js, and more.",
-    gradient: ["#1e1b4b", "#1e3a8a", "#0f172a"], // dark purple, dark blue, dark blue
+    gradient: ["#1e3a8a", "#2563eb", "#1e40af"], // dark blue, blue, dark blue
   },
   {
     id: "projects",
     title: "Projects",
     subtitle:
       "From web apps to CAD models — here's where code meets creativity.",
-    gradient: ["#1e1b4b", "#134e4a", "#0f172a"], // dark purple, dark teal, dark blue
+    gradient: ["#064e3b", "#166534", "#14532d"], // dark green, green, dark green
+  },
+  {
+    id: "hobbies",
+    title: "Hobbies",
+    subtitle:
+      "Beyond coding and design — here's what I love to do in my free time.",
+    gradient: ["#1e1b4b", "#581c87", "#0f172a"], // dark purple, dark purple, dark blue
   },
 ];
 
@@ -505,6 +512,40 @@ export default function HomePage() {
                   </div>
                 </motion.div>
               </motion.div>
+            </div>
+          )}
+
+          {section.id === "hobbies" && (
+            <div className="mt-12 w-full max-w-5xl">
+              <div className="relative mx-auto h-[400px] w-[400px]">
+                {[
+                  { icon: "💃", label: "Dancing" },
+                  { icon: "🎤", label: "Singing" },
+                  { icon: "📚", label: "Reading" },
+                  { icon: "🎹", label: "Piano" },
+                  { icon: "🎨", label: "Art" },
+                  { icon: "📸", label: "Photography" },
+                ].map((hobby, i, arr) => {
+                  const angle = (2 * Math.PI * i) / arr.length;
+                  const radius = 150;
+                  const x = 200 + radius * Math.cos(angle) - 64; // 64 = half of circle size (128px)
+                  const y = 200 + radius * Math.sin(angle) - 64;
+                  return (
+                    <div
+                      key={hobby.label}
+                      className="absolute flex h-32 w-32 flex-col items-center justify-center rounded-full border border-white/10 bg-white/10 backdrop-blur-lg transition-all duration-300 hover:scale-105"
+                      style={{ left: x, top: y }}
+                    >
+                      <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-800 to-indigo-800 text-2xl shadow-lg">
+                        {hobby.icon}
+                      </div>
+                      <h3 className="text-center text-sm font-bold text-white">
+                        {hobby.label}
+                      </h3>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </section>
