@@ -254,11 +254,52 @@ function AnimatedBackground({ gradient }: { gradient: string[] }) {
   );
 }
 
+// Add this hobbies array at the top level, outside the component
+const hobbies = [
+  {
+    icon: "💃",
+    label: "Dancing",
+    centerImage: "/dance.png", // Replace with your image or use a placeholder
+    backText: "I love to dance! It keeps me active and creative.",
+  },
+  {
+    icon: "🎨",
+    label: "Art",
+    centerImage: "/art.jpg",
+    backText: "Drawing and painting are my favorite ways to relax.",
+  },
+  {
+    icon: "📸",
+    label: "Photography",
+    centerImage: "/photography.jpg",
+    backText: "Capturing moments through my lens is magical.",
+  },
+  {
+    icon: "🎹",
+    label: "Piano",
+    centerImage: "/piano.jpg",
+    backText: "Playing piano helps me express my emotions through music.",
+  },
+  {
+    icon: "📚",
+    label: "Reading",
+    centerImage: "/reading.jpg",
+    backText: "Books open up new worlds and ideas for me.",
+  },
+  {
+    icon: "🎤",
+    label: "Singing",
+    centerImage: "/singing.jpg",
+    backText: "Singing brings me joy and confidence.",
+  },
+];
+
 export default function HomePage() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const sectionIds = sections.map((s) => s.id);
   const gradients = sections.map((s) => s.gradient);
   const bgGradient = useSectionScrollGradients(sectionIds, gradients);
+  const [hoveredHobby, setHoveredHobby] = useState<number | null>(null);
 
   return (
     <div className="relative z-0 min-h-screen scroll-smooth text-white">
@@ -523,32 +564,72 @@ export default function HomePage() {
 
           {section.id === "hobbies" && (
             <div className="mt-12 w-full max-w-5xl">
-              <div className="relative mx-auto h-[400px] w-[400px]">
-                {[
-                  { icon: "💃", label: "Dancing" },
-                  { icon: "🎤", label: "Singing" },
-                  { icon: "📚", label: "Reading" },
-                  { icon: "🎹", label: "Piano" },
-                  { icon: "🎨", label: "Art" },
-                  { icon: "📸", label: "Photography" },
-                ].map((hobby, i, arr) => {
+              <div className="relative mx-auto h-[600px] w-[600px]">
+                {/* Central image appears when a hobby is hovered */}
+                {hoveredHobby !== null && hobbies[hoveredHobby] && (
+                  <div className="pointer-events-none absolute top-1/2 left-1/2 z-10 flex h-48 w-48 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 shadow-xl backdrop-blur-lg">
+                    <img
+                      src={hobbies[hoveredHobby].centerImage}
+                      alt={hobbies[hoveredHobby].label}
+                      className="h-40 w-40 rounded-full object-cover"
+                    />
+                  </div>
+                )}
+                {hobbies.map((hobby, i, arr) => {
                   const angle = (2 * Math.PI * i) / arr.length;
-                  const radius = 150;
-                  const x = 200 + radius * Math.cos(angle) - 64; // 64 = half of circle size (128px)
-                  const y = 200 + radius * Math.sin(angle) - 64;
+                  const radius = 200;
+                  const x = 300 + radius * Math.cos(angle) - 80;
+                  const y = 300 + radius * Math.sin(angle) - 80;
+                  const isActive = hoveredHobby === i;
                   return (
-                    <div
+                    <motion.div
                       key={hobby.label}
-                      className="absolute flex h-32 w-32 flex-col items-center justify-center rounded-full border border-white/10 bg-white/10 backdrop-blur-lg transition-all duration-300 hover:scale-105"
-                      style={{ left: x, top: y }}
+                      className="absolute flex h-40 w-40 flex-col items-center justify-center rounded-full border border-white/10 bg-white/10 backdrop-blur-lg transition-all duration-300 hover:scale-105"
+                      style={{ left: x, top: y, zIndex: isActive ? 20 : 10 }}
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      whileInView={{
+                        opacity: 1,
+                        scale: 1,
+                        transition: {
+                          duration: 0.8,
+                          delay: i * 0.3,
+                          ease: "easeOut",
+                        },
+                      }}
+                      whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
+                      onMouseEnter={() => setHoveredHobby(i)}
+                      onMouseLeave={() => setHoveredHobby(null)}
                     >
-                      <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-800 to-indigo-800 text-2xl shadow-lg">
+                      <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-800 to-indigo-800 text-3xl shadow-lg">
                         {hobby.icon}
                       </div>
-                      <h3 className="text-center text-sm font-bold text-white">
+                      <h3 className="text-center text-base font-bold text-white">
                         {hobby.label}
                       </h3>
-                    </div>
+                      {/* Tooltip box appears to the right of the hovered circle */}
+                      {isActive && (
+                        <div className="absolute top-1/2 left-full z-30 ml-6 flex -translate-y-1/2 items-center">
+                          {/* SVG Arrow for a natural bubble look */}
+                          <svg
+                            width="24"
+                            height="48"
+                            viewBox="0 0 24 48"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="-ml-4"
+                          >
+                            <path
+                              d="M24 24C10 24 10 0 0 0V48C10 48 10 24 24 24Z"
+                              fill="rgba(255,255,255,0.10)"
+                            />
+                          </svg>
+                          {/* Box */}
+                          <div className="ml-1 max-w-xs rounded-2xl bg-white/10 px-6 py-4 text-base font-semibold text-white shadow-xl backdrop-blur-lg">
+                            {hobby.backText}
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
                   );
                 })}
               </div>
