@@ -4,21 +4,11 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // SVG flower inspired by the attached image (5-petal, pink/orange/yellow, outlined)
-function SmallFlower({
-  x,
-  y,
-  style = {},
-  ...props
-}: {
-  x: number;
-  y: number;
-  style?: React.CSSProperties;
-  [key: string]: unknown;
-}) {
+function SmallFlower({ x, y }: { x: number; y: number }) {
   return (
     <g transform={`translate(${x}, ${y})`}>
       {/* 5 petals */}
-      {[...Array(5)].map((_, i) => {
+      {Array.from({ length: 5 }).map((_, i) => {
         const angle = (i * 360) / 5;
         return (
           <path

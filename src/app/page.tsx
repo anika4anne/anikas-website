@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -167,15 +167,21 @@ function useSectionScrollGradients(
   sectionIds: string[],
   gradientsInput: string[][],
 ) {
-  const fallback: [string, string, string] = ["#1e1b4b", "#1e1b4b", "#1e1b4b"];
+  const fallback = useMemo(
+    (): [string, string, string] => ["#1e1b4b", "#1e1b4b", "#1e1b4b"],
+    [],
+  );
   // Helper to ensure a [string, string, string] gradient
-  function getSafeGradient(arr: unknown): [string, string, string] {
-    return Array.isArray(arr) &&
-      arr.length === 3 &&
-      arr.every((x) => typeof x === "string")
-      ? ([arr[0], arr[1], arr[2]] as [string, string, string])
-      : fallback;
-  }
+  const getSafeGradient = useCallback(
+    (arr: unknown): [string, string, string] => {
+      return Array.isArray(arr) &&
+        arr.length === 3 &&
+        arr.every((x) => typeof x === "string")
+        ? ([arr[0], arr[1], arr[2]] as [string, string, string])
+        : fallback;
+    },
+    [fallback],
+  );
 
   const initialGradient = getSafeGradient(gradientsInput[0] ?? fallback);
   const [bgGradient, setBgGradient] = useState<string[]>(initialGradient);

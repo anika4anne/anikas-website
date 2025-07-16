@@ -22,7 +22,7 @@ function PlumeriaFlower({
     >
       <g>
         {/* 5 petals */}
-        {[...Array(5)].map((_, i) => {
+        {Array.from({ length: 5 }).map((_, i) => {
           const angle = (i * 360) / 5;
           return (
             <path
