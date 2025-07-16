@@ -280,23 +280,39 @@ const hobbies = [
     backText: "I love to dance! It keeps me active and creative.",
   },
   {
-    icon: "🎨",
-    label: "Art",
-    centerImage: "/art.jpg",
-    achievements: [],
+    icon: "🤖",
+    label: "Roboticist",
+    centerImage: "/worlds.jpg",
+    achievements: [
+      {
+        year: "2025",
+        title: "Worlds Championship",
+        description: "Team Won Judge's Choice Award",
+      },
+      {
+        year: "2024",
+        title: "Manufacturer",
+        description: "In charge of 3D printing",
+      },
+      {
+        year: "2024",
+        title: "Webmaster",
+        description: "Given role to manage team website at jaybots.org",
+      },
+    ],
     backText: "Drawing and painting are my favorite ways to relax.",
   },
   {
     icon: "🏐",
     label: "Volleyball",
-    centerImage: "/volleyball.jpg",
+    centerImage: "/vb.png",
     achievements: [],
     backText: "Capturing moments through my lens is magical.",
   },
   {
     icon: "🎹",
     label: "Piano",
-    centerImage: "/piano.jpg",
+    centerImage: "/piano.png",
     achievements: [],
     backText: "Playing piano helps me express my emotions through music.",
   },
@@ -619,6 +635,10 @@ export default function HomePage() {
                   const x = 300 + radius * Math.cos(angle) - 80;
                   const y = 300 + radius * Math.sin(angle) - 80;
                   const isActive = hoveredHobby === i;
+                  // Tooltip direction logic
+                  const showLeft = ["Coding", "Piano", "Volleyball"].includes(
+                    hobby.label,
+                  );
                   return (
                     <motion.div
                       key={hobby.label}
@@ -644,9 +664,11 @@ export default function HomePage() {
                       <h3 className="text-center text-base font-bold text-white">
                         {hobby.label}
                       </h3>
-                      {/* Tooltip box appears to the right of the hovered circle */}
+                      {/* Tooltip box appears to the right or left of the hovered circle */}
                       {isActive && (
-                        <div className="absolute top-1/2 left-full z-30 ml-6 flex -translate-y-1/2 items-center">
+                        <div
+                          className={`absolute top-1/2 z-30 flex -translate-y-1/2 items-center ${showLeft ? "right-full mr-6 flex-row-reverse" : "left-full ml-6"}`}
+                        >
                           {/* SVG Arrow for a natural bubble look */}
                           <svg
                             width="24"
@@ -654,7 +676,9 @@ export default function HomePage() {
                             viewBox="0 0 24 48"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="-ml-4"
+                            className={
+                              showLeft ? "-mr-4 scale-x-[-1]" : "-ml-4"
+                            }
                           >
                             <path
                               d="M24 24C10 24 10 0 0 0V48C10 48 10 24 24 24Z"
@@ -662,15 +686,15 @@ export default function HomePage() {
                             />
                           </svg>
                           {/* Box */}
-                          <div className="ml-1 max-w-xs rounded-2xl bg-white/10 px-6 py-4 text-base font-semibold text-white shadow-xl backdrop-blur-lg">
+                          <div className="max-h-96 max-w-xs overflow-y-auto rounded-2xl bg-white/10 px-6 py-4 text-base font-semibold text-white shadow-xl backdrop-blur-lg">
                             {hobby.achievements &&
                             hobby.achievements.length > 0 ? (
                               <div className="flex flex-col gap-4">
                                 <h4 className="mb-2 text-lg font-bold text-white">
                                   Achievements
                                 </h4>
-                                {/* Years dancing badge for Dancing only */}
-                                {hobby.label === "Dancing" &&
+                                {/* Years badge for all hobbies with more than one achievement */}
+                                {hobby.achievements.length > 1 &&
                                   (() => {
                                     const years = hobby.achievements
                                       .map((a) => parseInt(a.year))
@@ -681,31 +705,76 @@ export default function HomePage() {
                                     return (
                                       diff && (
                                         <div className="mx-auto mb-3 w-fit rounded-full bg-purple-600/80 px-4 py-1 text-center text-sm font-bold text-white shadow">
-                                          Dancing for {diff} year
-                                          {diff > 1 ? "s" : ""}
+                                          {hobby.label.charAt(0).toUpperCase() +
+                                            hobby.label.slice(1)}{" "}
+                                          for {diff} year{diff > 1 ? "s" : ""}
                                         </div>
                                       )
                                     );
                                   })()}
-                                <ol className="relative border-l-2 border-white/30 pl-8">
+                                <ol className="relative pl-0">
+                                  {/* Timeline vertical line, absolutely positioned in the center of the timeline column */}
+                                  <div
+                                    className="absolute top-0 left-6 z-0 h-full w-0.5 bg-white/30"
+                                    style={{ left: "32px" }}
+                                  ></div>
                                   {hobby.achievements.map((ach, idx) => (
-                                    <li key={idx} className="mb-10 last:mb-0 relative flex">
-                                      {/* Timeline dot, perfectly centered on the line */}
-                                      <span className="absolute left-0 top-0 flex h-full w-8 justify-center">
-                                        <span className="relative z-10 mt-0.5 h-4 w-4 rounded-full bg-purple-400 border-2 border-white" style={{ left: '-2px' }}></span>
-                                      </span>
-                                      {/* Achievement content, moved down */}
-                                      <div className="mt-3">
-                                        <span className="text-xs text-purple-200 font-semibold">{ach.year}</span>
-                                        <div className="text-base font-bold text-white mt-1">{ach.title}</div>
-                                        <div className="text-sm text-white/80">{ach.description}</div>
+                                    <li
+                                      key={idx}
+                                      className="relative mb-10 flex items-start last:mb-0"
+                                    >
+                                      {/* Timeline column: dot and line */}
+                                      <div className="relative z-10 flex w-16 min-w-[64px] flex-col items-center">
+                                        <span className="mt-0.5 h-4 w-4 rounded-full border-2 border-white bg-purple-400"></span>
+                                        {/* Optionally, add connecting lines above/below the dot for multi-item timelines */}
+                                      </div>
+                                      {/* Year column */}
+                                      <div className="ml-2 flex w-12 min-w-[48px] items-center">
+                                        <span className="text-[11px] font-semibold text-purple-200">
+                                          {ach.year}
+                                        </span>
+                                      </div>
+                                      {/* Content column */}
+                                      <div className="ml-2">
+                                        <div className="mt-0.5 text-sm font-bold text-white">
+                                          {ach.title}
+                                        </div>
+                                        <div className="text-xs text-white/80">
+                                          {ach.description}
+                                        </div>
                                       </div>
                                     </li>
                                   ))}
                                 </ol>
                               </div>
                             ) : (
-                              <div>{hobby.backText}</div>
+                              <div className="flex flex-col gap-4">
+                                <h4 className="mb-2 text-lg font-bold text-white">
+                                  Achievements
+                                </h4>
+                                <ol className="relative pl-0">
+                                  {/* Timeline vertical line, absolutely positioned in the center of the timeline column */}
+                                  <div
+                                    className="absolute top-0 left-6 z-0 h-full w-0.5 bg-white/30"
+                                    style={{ left: "32px" }}
+                                  ></div>
+                                  <li className="relative mb-10 flex items-start last:mb-0">
+                                    <div className="relative z-10 flex w-16 min-w-[64px] flex-col items-center">
+                                      <span className="mt-0.5 h-4 w-4 rounded-full border-2 border-white bg-purple-400"></span>
+                                    </div>
+                                    <div className="ml-2 flex w-12 min-w-[48px] items-center">
+                                      <span className="text-[11px] font-semibold text-purple-200">
+                                        Now
+                                      </span>
+                                    </div>
+                                    <div className="ml-2">
+                                      <div className="text-xs text-white/80">
+                                        {hobby.backText}
+                                      </div>
+                                    </div>
+                                  </li>
+                                </ol>
+                              </div>
                             )}
                           </div>
                         </div>
